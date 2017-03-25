@@ -41,6 +41,7 @@
     "test": "karma start test/karma.conf.js"
   },
   "dependencies": {
+    "angular-ui-bootstrap": "^2.5.0",
     "highcharts-ng": "^1.0.1"
   }
 }
