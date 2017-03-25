@@ -142,3 +142,11 @@ Temporary Items
 .apdisk
 
 # End of https://www.gitignore.io/api/java,intellij,osx,linux,maven
+
+
+/frontend/node_modules
+/frontend/dist
+/frontend/.tmp
+/frontend/.sass-cache
+/frontend/bower_components
+
