@@ -3,10 +3,10 @@
 
 
 angular.module('auctionHelperApp')
-  .controller('TopOffersGapsCtrl', function (serverAddress, $scope) {
+  .controller('TopOffersGapsCtrl', function (serverAddress, $scope, $http) {
 
     $scope.getOffers = function (days) {
-      $http.get(serverAddress + '/offer_gaps')
+      $http.get(serverAddress + '/offer-gaps')
         .then(function (response) {
           $scope.offers = response.data;
           console.info(response.data);
