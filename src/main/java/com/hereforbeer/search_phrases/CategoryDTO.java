@@ -3,9 +3,14 @@ package com.hereforbeer.search_phrases;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-@Data
-public class CategoryIdDTO {
+import java.util.List;
+
+@Data(staticConstructor = "of")
+class CategoryDTO {
 
     @JsonProperty("category_id")
     private final String categoryId;
+
+    @JsonProperty("path")
+    private final List<String> path;
 }

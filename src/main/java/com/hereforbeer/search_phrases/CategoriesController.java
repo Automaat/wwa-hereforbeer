@@ -13,41 +13,56 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 @Controller
 @RequestMapping("/categories")
-public class CategoriesController {
+class CategoriesController {
 
     private final SearchPhraseRepository searchPhraseRepository;
 
+    private final CategoryTreeRepository categoryTreeRepository;
+
     @Autowired
-    public CategoriesController(SearchPhraseRepository searchPhraseRepository) {
+    public CategoriesController(SearchPhraseRepository searchPhraseRepository, CategoryTreeRepository categoryTreeRepository) {
         this.searchPhraseRepository = searchPhraseRepository;
+        this.categoryTreeRepository = categoryTreeRepository;
     }
 
     @GetMapping(params = {"searchPhrase"})
-    public ResponseEntity<?> getCategories(@RequestParam("searchPhrase") String searchPhrase) {
-        SearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(matchQuery("search_phrase", searchPhrase))
-                .withSort(SortBuilders
-                        .fieldSort("pv_count")
-                        .order(SortOrder.DESC))
-                .withSort(SortBuilders
-                        .fieldSort("visit_count")
-                        .order(SortOrder.DESC))
-                .withIndices("search_phrases-2016-12-31")
-                .withPageable(new PageRequest(0,10))
-                .build();
+    ResponseEntity<?> getCategories(@RequestParam("searchPhrase") String searchPhrase) {
+        SearchQuery query = mostRelevantCategoryQuery(searchPhrase);
 
         List<SearchPhrase> results = searchPhraseRepository.search(query).getContent();
         return results
                 .stream()
                 .findFirst()
-                .map(phrase -> ResponseEntity.ok(new CategoryIdDTO(phrase.getCategoryId())))
+                .flatMap(phrase -> Optional.ofNullable(phrase.getCategoryId()))
+                .map(id -> ResponseEntity.ok(categoryById(id)))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    private SearchQuery mostRelevantCategoryQuery(@RequestParam("searchPhrase") String searchPhrase) {
+        return new NativeSearchQueryBuilder()
+                    .withQuery(matchQuery("search_phrase", searchPhrase))
+                    .withSort(SortBuilders
+                            .fieldSort("pv_count")
+                            .order(SortOrder.DESC))
+                    .withSort(SortBuilders
+                            .fieldSort("visit_count")
+                            .order(SortOrder.DESC))
+                    .withIndices("search_phrases-2016-12-31")
+                    .withPageable(new PageRequest(0,10))
+                    .build();
+    }
+
+    private CategoryDTO categoryById(String categoryId) {
+        CategoryTree category = categoryTreeRepository.findOne(categoryId);
+        return CategoryDTO.of(categoryId, category == null ? Collections.emptyList() : category.getNamePath());
     }
 
 }
