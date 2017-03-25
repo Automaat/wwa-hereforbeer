@@ -10,12 +10,21 @@ import org.springframework.data.elasticsearch.annotations.Document;
 public class OfferGaps {
 
 
-    private int searches_count;
-    private int offers_count;
     @Id
     private String id;
+
+    @JsonProperty("searches_count")
+    private int searchesCount;
+
+    @JsonProperty("offers_count")
+    private int offersCount;
+
     @JsonProperty("search_phrase")
     private String searchPhrase;
+
+    @JsonProperty("v_date")
+    private String vDate;
+
     private double score;
-    private String v_date;
+
 }
