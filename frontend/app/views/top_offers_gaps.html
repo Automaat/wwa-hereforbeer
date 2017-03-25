@@ -9,13 +9,13 @@
     </p>
   </div>
   <div class="col-md-5">
-    <select class="form-control" name="size">
+    <select class="form-control" ng-model="selectedItem" name="size">
       <option value="pie">Pie chart</option>
       <option value="stack">Stack chart</option>
     </select>
   </div>
   <div class="col-md-2">
-    <button class="btn btn btn-primary" role="button" ng-click="plotChart()">Subscribe</button></div>
+    <button class="btn btn btn-primary" role="button" ng-click="plotChart()">Get data</button></div>
   </div>
 </div>
 
