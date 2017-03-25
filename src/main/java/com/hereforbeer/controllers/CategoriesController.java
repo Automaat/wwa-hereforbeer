@@ -15,7 +15,6 @@ class CategoriesController {
 
     private final CategoriesService categoriesService;
 
-    @Autowired
     CategoriesController(CategoriesService categoriesService) {
         this.categoriesService = categoriesService;
     }
@@ -25,5 +24,10 @@ class CategoriesController {
         return categoriesService.getCategories(searchPhrase)
                 .map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping(value = "/trends", params = {"searchPhrase"})
+    ResponseEntity<?> getTrends(@RequestParam("searchPhrase") String searchPhrase) {
+        return ResponseEntity.ok(categoriesService.getTrends(searchPhrase));
     }
 }

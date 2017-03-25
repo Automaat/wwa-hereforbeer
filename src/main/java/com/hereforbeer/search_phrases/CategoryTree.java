@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 @Document(indexName = "category_tree-2016-12-31", type = "categoryTree")
-
 class CategoryTree {
 
     @Id

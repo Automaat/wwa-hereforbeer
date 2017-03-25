@@ -14,7 +14,7 @@ class ScoreController {
 
     private final ScoreService scoreService;
 
-    public ScoreController(ScoreService scoreService) {
+    ScoreController(ScoreService scoreService) {
         this.scoreService = scoreService;
     }
 

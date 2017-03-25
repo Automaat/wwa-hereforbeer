@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 interface CategoryTreeRepository extends ElasticsearchRepository<CategoryTree, String> {
-
 }
