@@ -3,6 +3,7 @@ package com.hereforbeer.search_phrases;
 import com.hereforbeer.controllers.exchanges.CategoryDTO;
 import com.hereforbeer.controllers.exchanges.TrendDTO;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum;
@@ -18,10 +19,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
@@ -125,11 +123,13 @@ public class CategoriesService {
         });
 
         //this probably won't work because of spring data api
-        List<InternalSum> pvSums = (List<InternalSum>) aggregations.getAsMap().get(MAIN_AGGREGATE).getProperty(PV_SUM_AGGREGATE);
-        List<InternalSum> visitsSums = (List<InternalSum>) aggregations.getAsMap().get(MAIN_AGGREGATE).getProperty(VISIT_SUM_AGGREGATE);
+        Aggregation aggregation = aggregations.getAsMap().get(MAIN_AGGREGATE);
 
-        List<Double> pvSumsMapped = removeEmptyEntriesAndMapToDoble(pvSums);
-        List<Double> visitsSumsMapped = removeEmptyEntriesAndMapToDoble(visitsSums);
+        List<InternalSum> pvSums = convertToListOfInternalSums(aggregation.getProperty(PV_SUM_AGGREGATE));
+        List<InternalSum> visitsSums = convertToListOfInternalSums(aggregation.getProperty(VISIT_SUM_AGGREGATE));
+
+        List<Double> pvSumsMapped = removeEmptyEntriesAndMapToDouble(pvSums);
+        List<Double> visitsSumsMapped = removeEmptyEntriesAndMapToDouble(visitsSums);
         List<Double> effectiveness = new ArrayList(pvSumsMapped.size());
 
         for (int i = 0; i < pvSumsMapped.size(); i++) {
@@ -139,10 +139,22 @@ public class CategoriesService {
         return TrendDTO.of(pvSumsMapped, visitsSumsMapped, effectiveness);
     }
 
-    private List<Double> removeEmptyEntriesAndMapToDoble(List<InternalSum> sums) {
+    private List<Double> removeEmptyEntriesAndMapToDouble(List<InternalSum> sums) {
         return sums.stream()
                 .filter(item -> item.getValue() != 0)
                 .map(InternalSum::getValue)
                 .collect(Collectors.toList());
+    }
+
+    private List<InternalSum> convertToListOfInternalSums(Object property) {
+        Object[] array = (Object[]) property;
+        List<InternalSum> result = new ArrayList<>(array.length);
+
+        for (Object o : array) {
+            InternalSum internalSum = (InternalSum) o;
+            result.add(internalSum);
+        }
+
+        return result;
     }
 }
