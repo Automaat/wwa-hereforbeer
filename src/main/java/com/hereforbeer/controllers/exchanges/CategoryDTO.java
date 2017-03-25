@@ -1,4 +1,4 @@
-package com.hereforbeer.search_phrases;
+package com.hereforbeer.controllers.exchanges;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data(staticConstructor = "of")
-class CategoryDTO {
+public class CategoryDTO {
 
     @JsonProperty("category_id")
     private final String categoryId;

@@ -1,13 +1,15 @@
 package com.hereforbeer.controllers.exchanges;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-@Data
-@AllArgsConstructor
+@Data(staticConstructor = "of")
 public class OfferGapDTO {
 
-    private String name;
-    private Integer y;
+    @JsonProperty("name")
+    private final String name;
+
+    @JsonProperty("y")
+    private final Integer y;
 
 }

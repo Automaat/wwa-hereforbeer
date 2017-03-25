@@ -27,7 +27,7 @@ public class OfferGapController {
         return ResponseEntity.ok(bestOfferGaps
                 .entrySet()
                 .stream()
-                .map( entry -> new OfferGapDTO(entry.getKey(), entry.getValue()))
+                .map( entry -> OfferGapDTO.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList()));
 
     }
