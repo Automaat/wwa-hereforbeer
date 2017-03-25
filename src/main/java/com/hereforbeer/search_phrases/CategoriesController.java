@@ -4,6 +4,7 @@ import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.http.HttpStatus;
@@ -61,8 +62,22 @@ class CategoriesController {
     }
 
     private CategoryDTO categoryById(String categoryId) {
-        CategoryTree category = categoryTreeRepository.findOne(categoryId);
-        return CategoryDTO.of(categoryId, category == null ? Collections.emptyList() : category.getNamePath());
+
+        List<CategoryTree> results = categoryTreeRepository.search(getCategoryByIdQuery(categoryId)).getContent();
+
+        List<String> path = results.stream()
+                .findFirst()
+                .map(CategoryTree::getNamePath)
+                .orElse(Collections.emptyList());
+
+        return CategoryDTO.of(categoryId, path);
+    }
+
+    private NativeSearchQuery getCategoryByIdQuery(String categoryId) {
+        return new NativeSearchQueryBuilder()
+                    .withQuery(matchQuery("category_id", categoryId))
+                    .withPageable(new PageRequest(0, 1))
+                    .build();
     }
 
 }
