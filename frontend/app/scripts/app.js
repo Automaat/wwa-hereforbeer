@@ -35,6 +35,10 @@ var app = angular
         templateUrl: 'views/categories_search.html',
         controller: 'CategoriesSearchCtrl'
       })
+      .when('/trends', {
+        templateUrl: 'views/trends.html',
+        controller: 'TrendsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
