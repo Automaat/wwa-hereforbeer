@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 @Data
 @Document(indexName = "offer_gaps-2017-01-27", type = "offer_gaps")
-public class OfferGaps {
+class OfferGaps {
 
 
     @Id

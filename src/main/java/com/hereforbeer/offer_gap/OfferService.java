@@ -4,11 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -20,12 +22,13 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.reverseOrder;
 
-@RestController
+@Service
 public class OfferService {
 
     private static final int MAX_SCORE = 10;
     private static final int LAST_DAYS = 2;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     private static final NativeSearchQueryBuilder QUERY_TEMPLATE = new NativeSearchQueryBuilder()
             .withSort(SortBuilders
                     .fieldSort("score")
@@ -34,11 +37,15 @@ public class OfferService {
 
     private Map<OfferGaps, Integer> candidates = new ConcurrentHashMap<>();
 
-    @Autowired
-    private OfferGapRepository repository;
+    private final OfferGapRepository repository;
 
-    @GetMapping("/offer-gaps")
-    public List<OfferGaps> get() {
+    @Autowired
+    public OfferService(OfferGapRepository repository) {
+        this.repository = repository;
+    }
+
+    @Cacheable("offerGaps")
+    public Map<String, Integer> getBestOfferGaps() {
 
         LocalDateTime currentDate = now();
 
@@ -68,6 +75,10 @@ public class OfferService {
         return sortedCandidates();
     }
 
+    @CacheEvict("offerGaps")
+    @Scheduled(cron = "${cache.cron}")
+    public void evictCache() {}
+
     private LocalDateTime now() {
         return LocalDateTime.of(2017, Month.JANUARY, 28, 0, 0);
     }
@@ -88,12 +99,12 @@ public class OfferService {
         return first.length() < second.length() ? first.length() : second.length();
     }
 
-    private List<OfferGaps> sortedCandidates() {
+    private Map<String, Integer> sortedCandidates() {
         return candidates.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(reverseOrder()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+                .limit(10)
+                .collect(Collectors.toMap( e -> e.getKey().getSearchPhrase(), Map.Entry::getValue));
     }
 
 }
