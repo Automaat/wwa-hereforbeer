@@ -31,6 +31,10 @@ var app = angular
         controller: 'TopOffersGapsCtrl',
         controllerAs: 'topOffersGaps'
       })
+      .when('/categories_search', {
+        templateUrl: 'views/categories_search.html',
+        controller: 'CategoriesSearchCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
