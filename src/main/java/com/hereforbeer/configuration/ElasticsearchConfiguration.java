@@ -14,7 +14,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import java.net.InetAddress;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "com.hereforbeer.repositories")
+@EnableElasticsearchRepositories(basePackages = "com.hereforbeer")
 public class ElasticsearchConfiguration {
 
     @Value("${elasticsearch.host}")
@@ -30,7 +30,6 @@ public class ElasticsearchConfiguration {
     public Client client() throws Exception {
 
         Settings esSettings = Settings.settingsBuilder()
-                .put("http.enabled", true)
                 .put("cluster.name", EsClusterName)
                 .build();
 
