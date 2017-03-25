@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular
+var app = angular
   .module('auctionHelperApp', [
     'ngAnimate',
     'ngCookies',
@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'highcharts-ng'
   ])
   .config(function ($routeProvider  ) {
     $routeProvider
@@ -37,3 +38,5 @@ angular
   .config(['$locationProvider', function($locationProvider) {
     $locationProvider.hashPrefix('');
   }]);
+
+app.constant('serverAddress', 'http://localhost:8080');
