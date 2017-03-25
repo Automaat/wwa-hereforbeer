@@ -15,17 +15,52 @@ angular.module('auctionHelperApp')
     };
 
     $scope.estimates = {score : 10};
+    $scope.allData = [];
+    $scope.allDataLabels = [];
+
 
     $scope.estimate = function () {
       $http.get(serverAddress + '/scores?searchPhrase=' + $scope.auction.query)
         .then(function (response) {
           $scope.estimates = response.data;
-          chartSpeed.series[0].points[0].update($scope.estimates.score)
+          chartSpeed.series[0].points[0].update($scope.estimates.score);
+          $scope.allData.push($scope.estimates.score);
+          $scope.allDataLabels.push($scope.auction.query);
+          console.info($scope.estimates.score);
+          console.info($scope.auction.query);
+          // $scope.plotSecondChart();
           console.info(response.data);
         }, function () {
           console.error("Error getting offers");
         });
     };
+
+    $scope.plotSecondChart = function () {
+      $(document).ready(function () {
+        Highcharts.chart('container', {
+
+          title: {
+            text: 'Chart.update'
+          },
+
+          subtitle: {
+            text: 'Plain'
+          },
+
+          xAxis: {
+            categories: $scope.allDataLabels
+          },
+
+          series: [{
+            type: 'column',
+            colorByPoint: true,
+            data: $scope.allData,
+            showInLegend: false
+          }]
+
+        });
+      });
+    }
 
     var gaugeOptions = {
 

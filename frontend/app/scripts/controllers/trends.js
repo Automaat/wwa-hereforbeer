@@ -13,9 +13,14 @@ angular.module('auctionHelperApp')
     $scope.auction = {
       'query' : ''
     };
+    $scope.trendsData = {
+      'searches_count' : '',
+      'visits_count' : '',
+      'effectiveness' : ''
+    };
 
     $scope.searchForTrends = function () {
-      $http.get(serverAddress + '/trends?searchPhrase=' + $scope.auction.query)
+      $http.get(serverAddress + '/categories/trends?searchPhrase=' + $scope.auction.query)
         .then(function (response) {
           $scope.trendsData = response.data;
           console.info(response.data);
@@ -33,10 +38,10 @@ angular.module('auctionHelperApp')
             zoomType: 'xy'
           },
           title: {
-            text: 'Average Monthly Weather Data for Tokyo'
+            text: 'Aggregated trends chart'
           },
           subtitle: {
-            text: 'Source: WorldClimate.com'
+            text: ''
           },
           xAxis: [{
             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -45,13 +50,13 @@ angular.module('auctionHelperApp')
           }],
           yAxis: [{ // Primary yAxis
             labels: {
-              format: '{value}°C',
+              format: '{value}',
               style: {
                 color: Highcharts.getOptions().colors[2]
               }
             },
             title: {
-              text: 'Temperature',
+              text: 'Number of searches',
               style: {
                 color: Highcharts.getOptions().colors[2]
               }
@@ -61,13 +66,13 @@ angular.module('auctionHelperApp')
           }, { // Secondary yAxis
             gridLineWidth: 0,
             title: {
-              text: 'Rainfall',
+              text: 'Effectiveness',
               style: {
                 color: Highcharts.getOptions().colors[0]
               }
             },
             labels: {
-              format: '{value} mm',
+              format: '{value} %',
               style: {
                 color: Highcharts.getOptions().colors[0]
               }
@@ -76,13 +81,13 @@ angular.module('auctionHelperApp')
           }, { // Tertiary yAxis
             gridLineWidth: 0,
             title: {
-              text: 'Sea-Level Pressure',
+              text: 'Auctions',
               style: {
                 color: Highcharts.getOptions().colors[1]
               }
             },
             labels: {
-              format: '{value} mb',
+              format: '{value}',
               style: {
                 color: Highcharts.getOptions().colors[1]
               }
@@ -102,19 +107,19 @@ angular.module('auctionHelperApp')
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
           },
           series: [{
-            name: 'Rainfall',
+            name: 'Effectiveness',
             type: 'column',
             yAxis: 1,
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+            data: $scope.trendsData.effectiveness,
             tooltip: {
               valueSuffix: ' mm'
             }
 
           }, {
-            name: 'Sea-Level Pressure',
+            name: 'Auctions visited',
             type: 'spline',
             yAxis: 2,
-            data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
+            data: $scope.trendsData.visits_count,
             marker: {
               enabled: false
             },
@@ -124,9 +129,9 @@ angular.module('auctionHelperApp')
             }
 
           }, {
-            name: 'Temperature',
+            name: 'Searches count',
             type: 'spline',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            data: $scope.trendsData.searches_count,
             tooltip: {
               valueSuffix: ' °C'
             }
