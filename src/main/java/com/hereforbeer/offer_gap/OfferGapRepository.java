@@ -4,5 +4,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OfferGapRepository extends ElasticsearchRepository<OfferGaps, String> {
+interface OfferGapRepository extends ElasticsearchRepository<OfferGaps, String> {
 }
