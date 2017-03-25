@@ -8,7 +8,6 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <!-- endbower -->
     <!-- endbuild -->
@@ -42,9 +41,10 @@
 
             <ul class="nav navbar-nav">
               <li class="active"><a href="#/"><i class="fa fa-home"></i> Home</a></li>
-              <li><a ng-href="#/top_offers_gaps"><i class="fa fa-line-chart"></i> Offer gaps</a></li>
+              <li><a ng-href="#/top_offers_gaps"><i class="fa fa-pie-chart"></i> Offer gaps</a></li>
               <li><a ng-href="#/categories_search"><i class="fa fa-font-awesome"></i> Categories search</a></li>
               <li><a ng-href="#/trends"><i class="fa fa-area-chart"></i> Trends</a></li>
+              <li><a ng-href="#/estimator"><i class="fa fa-line-chart"></i> Estimator</a></li>
             </ul>
           </div>
         </div>
@@ -81,6 +81,8 @@
     <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/highcharts/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -90,6 +92,7 @@
         <script src="scripts/controllers/top_offers_gaps.js"></script>
     <script src="scripts/controllers/categories_search.js"></script>
     <script src="scripts/controllers/trends.js"></script>
+    <script src="scripts/controllers/estimator.js"></script>
     <!-- endbuild -->
 
     <script>

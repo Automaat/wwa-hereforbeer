@@ -39,6 +39,10 @@ var app = angular
         templateUrl: 'views/trends.html',
         controller: 'TrendsCtrl'
       })
+      .when('/estimator', {
+        templateUrl: 'views/estimator.html',
+        controller: 'EstimatorCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
