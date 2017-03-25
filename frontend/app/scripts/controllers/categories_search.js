@@ -14,11 +14,13 @@ angular.module('auctionHelperApp')
       'name' : ''
     };
 
+    $scope.categoryTree;
+
     $scope.searchForCategory = function () {
       $http.get(serverAddress + '/categories?searchPhrase=' + $scope.auction.name)
         .then(function (response) {
-          $scope.categoryTree = response.data;
-          console.info(response.data);
+          $scope.categoryTree = response.data.path;
+
         }, function () {
           console.error("Error getting offers");
         });
