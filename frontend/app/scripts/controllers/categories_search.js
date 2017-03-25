@@ -15,7 +15,7 @@ angular.module('auctionHelperApp')
     };
 
     $scope.searchForCategory = function () {
-      $http.get(serverAddress + '/categories?' + $scope.auction.name)
+      $http.get(serverAddress + '/categories?searchPhrase=' + $scope.auction.name)
         .then(function (response) {
           $scope.categoryTree = response.data;
           console.info(response.data);
