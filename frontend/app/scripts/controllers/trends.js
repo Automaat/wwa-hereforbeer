@@ -112,7 +112,7 @@ angular.module('auctionHelperApp')
             yAxis: 1,
             data: $scope.trendsData.effectiveness,
             tooltip: {
-              valueSuffix: ' mm'
+              valueSuffix: ''
             }
 
           }, {
@@ -125,7 +125,7 @@ angular.module('auctionHelperApp')
             },
             dashStyle: 'shortdot',
             tooltip: {
-              valueSuffix: ' mb'
+              valueSuffix: ''
             }
 
           }, {
@@ -133,7 +133,7 @@ angular.module('auctionHelperApp')
             type: 'spline',
             data: $scope.trendsData.searches_count,
             tooltip: {
-              valueSuffix: ' °C'
+              valueSuffix: ''
             }
           }]
         });
